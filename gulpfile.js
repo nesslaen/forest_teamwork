@@ -19,3 +19,43 @@ gulp.task('sprite', function(){
 	var cssStream = spriteData.css.pipe(gulp.dest('src/scss/components/')); //куда заливается scss
 	return (imgStream, cssStream);
 });
+
+var pug = require('gulp-pug');
+var notify = require("gulp-notify");
+
+gulp.task('pug',function(){
+	return gulp.src(['src/pug/**/*.pug','!src/pug/**/_*.pug'])
+		.pipe(pug({pretty:'\t'}))
+		.on("error", notify.onError())
+		.pipe(gulp.dest('app'));
+});
+
+var sass = require('gulp-sass');
+
+// gulp.task('sass', function(){
+// 	return gulp.src('.src/scss/**/*.scss')
+// 		.on("error",notify.onError())
+// 		.pipe(gulp.dest('app/css'));
+// });
+
+var bourbon = require('node-bourbon');
+var rename = require("gulp-rename");
+var autoprefixer = require('gulp-autoprefixer');
+var cleanCSS = require('gulp-clean-css');
+var csscomb = require('gulp-csscomb');
+
+gulp.task('sass', function() {
+	return gulp.src('src/scss/**/*.scss')
+		.pipe(sass({includePaths: bourbon.includePaths}) //подключаем Bourbon
+		.on("error", notify.onError()))
+		.pipe(rename({suffix: '.min', prefix: ''})) 
+		.pipe(autoprefixer(['last 15 versions'])) //подключаем Autoprefixer
+		.pipe(cleanCSS())
+		.pipe(csscomb())
+		.pipe(gulp.dest('app/css'))
+});
+
+gulp.task('watch', ['pug','sass'], function() {
+	gulp.watch('src/pug/**/*.pug', ['pug']);
+	gulp.watch('src/scss/**/*.scss', ['sass']);
+});
