@@ -59,3 +59,11 @@ gulp.task('watch', ['pug','sass'], function() {
 	gulp.watch('src/pug/**/*.pug', ['pug']);
 	gulp.watch('src/scss/**/*.scss', ['sass']);
 });
+
+var imagemin = require('gulp-imagemin');
+
+gulp.task('compress', function() {
+  gulp.src('src/img/*')
+  .pipe(imagemin())
+  .pipe(gulp.dest('app/img'))
+});
