@@ -1,0 +1,19 @@
+doctype html
+html
+	head
+		block head
+	body
+		block body
+			header
+				block header
+		block case
+			case friends
+				when 0
+					p you have no friends
+				when 1
+					p you have a friend
+				default
+					p you have #{friends} friends
+	footer
+		block footer
+			
